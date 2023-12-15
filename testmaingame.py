@@ -1,57 +1,55 @@
-# This file was created by: Roan Kher, Matthew Suh, and Jack Gately
-# Sources: Chris Bradfield, reviewed and optimized by ChatGPT
-
-
-# Title: 
-
-'''
-We realized that we were all passionate about tracking sports scores in real time and we are all involved in fantasy sports in some way. 
-We wanted to create an algorithim to predict the future scores of NFL games and stats of the players while also providing the real time scores
-We are planning to use different APIs to track scores and use statistical models of linear regression to predict the yard totals of players and the results of games. 
-'''
-'''
-Goals:
-Create a predictive NFL sports betting model in python that will provide users with accurate NFL game projections and bets with positive
-Expected Value (EV)
-Using statistics to predict the best bets on sportsbooks websites. 
-Tracking sports scores on different tables and finding links to all the games. 
-Importing historical data from website and use it to predict future data
-
-'''
-
 import tkinter as tk
 
-# Function to handle the "Stats" button click
 def on_stats_button_click():
-    label.config(text="Stats!", font=border_font, bg="White")  # Change label text and style
-    projections_button.place(x=150, y=100)  # Move projections button
-    stats_button.place_forget()  # Hide stats button
+    label.config(text="Stats!", font=border_font, bg="White")
+    projections_button.place(x=150, y=100)
+    stats_button.place_forget()
     create_fantasy_boxes()  # Create fantasy boxes
-    label.after(3000, reset_label_text2)  # After 3000 milliseconds, reset label text
-    show_search_bar()  # Show the search bar
+    label.after(3000, reset_label_text2)
+    show_search_bar()
 
-# Function to reset label text after a certain time
 def reset_label_text2():
     label.config(text="Welcome to Team Statistics", bg="white")
 
-# Function to handle the "Projections" button click
 def on_projections_button_click():
-    label.config(text="Projections", font=border_font, bg="white")  # Change label text and style
-    stats_button.place(x=50, y=100)  # Move stats button
-    projections_button.place_forget()  # Hide projections button
+    label.config(text="Projections", font=border_font, bg="white")
+    stats_button.place(x=50, y=100)
+    projections_button.place_forget()
     create_projection_boxes()  # Create projection boxes
-    label.after(3000, reset_label_text)  # After 3000 milliseconds, reset label text
-    show_search_bar()  # Show the search bar
+    label.after(3000, reset_label_text)
+    show_search_bar()
 
-# Function to reset label text
 def reset_label_text():
     label.config(text="Welcome to Projections!", bg="white")
 
-# Function to show the search bar
 def show_search_bar():
     search_entry.place(x=800, y=50)
+    search_entry.delete(0, tk.END)  # Clear the search entry
+    clear_button.place_forget()  # Hide the clear button
+teams = []
+def handle_search_entry(event):
+    search_text = search_entry.get()
+    names = search_text.split(",")
+    if len(names) == 2:
+        team1_name, team2_name = names[0].strip(), names[1].strip()
+        team_names_label.config(text=f"{team1_name} vs {team2_name}")
+        clear_button.place(x=800, y=100)  # Show the clear button
+        for i in teams:
+            if i['Team'] == team1_name:
+                update_values_in_window(i, row=2)
+            elif i['Team'] == team2_name:
+                update_values_in_window(i, row=3)
 
-# Function to create fantasy boxes
+def update_values_in_window(team_data, row):
+    for idx, key in enumerate(['PPG/F', 'Pass TD/F', 'Rush TD/F', 'FGM/F',
+                               'PPG/A', 'Pass TD/A', 'Rush TD/A', 'FGM/A']):
+        boxes[row][idx].config(text=f"{key}: {team_data[key]}")
+
+def clear_values():
+    for box_row in boxes:
+        for box in box_row:
+            box.config(text="")
+
 def create_fantasy_boxes():
     destroy_all_boxes()  # Clear all boxes
     box_texts = ["Points", "Passing", "Rushing", "FG", "Points Allowed", "Pass TD Allowed", "Rush TD Allowed", "Field Goals"]
@@ -60,7 +58,6 @@ def create_fantasy_boxes():
         box.place(x=50, y=200 + i * 50)
         boxes.append(box)
 
-# Function to create projection boxes
 def create_projection_boxes():
     destroy_all_boxes()  # Clear all boxes
     projectionsbox_texts = ["PredictedPoints", "PredictedPassing", "PredictedRushing", "PredictedFG", "PredictedPoints Allowed", "PredictedPass TD Allowed", "PredictedRush TD Allowed", "PredictedField Goals"]
@@ -69,58 +66,48 @@ def create_projection_boxes():
         projectionsbox.place(x=50, y=200 + i * 50)
         boxes.append(projectionsbox)
 
-# Function to destroy all boxes
 def destroy_all_boxes():
     for box in boxes:
         box.destroy()
     boxes.clear()
 
-# List to store team data dictionaries
-teams = []
-
-# Function to handle search entry events
-def handle_search_entry(event):
-    search_text = search_entry.get()
-    for i in teams:
-        if i['Team'] == search_text:
-            update_values_in_window(i)
-
-# Function to update values in the window based on team data
-def update_values_in_window(team_data):
-    for idx, key in enumerate(['PPG/F', 'Pass TD/F', 'Rush TD/F', 'FGM/F',
-                               'PPG/A', 'Pass TD/A', 'Rush TD/A', 'FGM/A']):
-        boxes[idx].config(text=f"{key}: {team_data[key]}")
-
-# Create the main window
 window = tk.Tk()
 window.title("My Python Window")
 window.geometry("1000x800")
 window.configure(bg="white")
 
-# Set fonts for buttons and labels
 button_font = ("Times New Roman", 12, "bold")
 border_font = ("Times New Roman", 24, "bold")
 
-# Create "Stats" button
 stats_button = tk.Button(window, text="Stats", command=on_stats_button_click, font=button_font, width=10, height=3, bg="light blue")
 stats_button.place(x=50, y=100)
 
-# Create "Projections" button
 projections_button = tk.Button(window, text="Projections", command=on_projections_button_click, font=button_font, width=10, height=3, bg="light green")
 projections_button.place(x=150, y=100)
 
-# Create a label
 label = tk.Label(window, text="Welcome to our website", bg="light blue")
 label.pack()
 
-# Create a search entry field
 search_entry = tk.Entry(window, width=20, font=button_font)
 search_entry.bind("<Return>", handle_search_entry)  # Bind the Enter key event
 
-# List to store created boxes
-boxes = []
+clear_button = tk.Button(window, text="Clear", command=clear_values, font=button_font, width=10, height=3, bg="light coral")
 
-# Team Data according to ...
+team_names_label = tk.Label(window, text="", font=("Arial", 14))
+team_names_label.pack()
+
+# Create labels for displaying values
+boxes = []
+for i in range(4):
+    row = []
+    for j in range(8):
+        box = tk.Label(window, text="", font=button_font, bg="light gray", width=25, height=2)
+        box.grid(row=i + 2, column=j, padx=10, pady=5, sticky="w")
+        row.append(box)
+    boxes.append(row)
+
+
+
 arizona = {
     'Team': 'Arizona',
     'PPG/F': 17.2,
@@ -543,9 +530,4 @@ teams.append(washington)
 
 
 
-
-
 window.mainloop()
-
-    
-

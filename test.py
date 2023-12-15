@@ -1,24 +1,3 @@
-# This file was created by: Roan Kher, Matthew Suh, and Jack Gately
-# Sources: Chris Bradfield, reviewed and optimized by ChatGPT
-
-
-# Title: 
-
-'''
-We realized that we were all passionate about tracking sports scores in real time and we are all involved in fantasy sports in some way. 
-We wanted to create an algorithim to predict the future scores of NFL games and stats of the players while also providing the real time scores
-We are planning to use different APIs to track scores and use statistical models of linear regression to predict the yard totals of players and the results of games. 
-'''
-'''
-Goals:
-Create a predictive NFL sports betting model in python that will provide users with accurate NFL game projections and bets with positive
-Expected Value (EV)
-Using statistics to predict the best bets on sportsbooks websites. 
-Tracking sports scores on different tables and finding links to all the games. 
-Importing historical data from website and use it to predict future data
-
-'''
-
 import tkinter as tk
 
 # Function to handle the "Stats" button click
